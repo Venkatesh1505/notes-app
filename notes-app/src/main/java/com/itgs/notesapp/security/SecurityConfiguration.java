@@ -1,6 +1,7 @@
 package com.itgs.notesapp.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,6 +31,10 @@ public class SecurityConfiguration{
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("/register/**").permitAll()
+                                .requestMatchers("/**.png").permitAll()
+                                .requestMatchers("/**.jpeg").permitAll()
+                                .requestMatchers("/**.mp4").permitAll()
+                                .requestMatchers("/**.pdf").permitAll()
                                 .requestMatchers("/").authenticated()
                                 .requestMatchers("/users").hasRole("ADMIN")
                 ).formLogin(
@@ -42,7 +47,8 @@ public class SecurityConfiguration{
                         logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                                 .permitAll()
-                );
+                )
+                .headers().frameOptions().sameOrigin();
         return http.build();
     }
 
